@@ -63,6 +63,64 @@ No início, escolha se deseja treinar com CPU ou GPU.
 
 Os pesos do modelo serão salvos na pasta `weights/` após cada época.
 
+# EDA (Análise Exploratória de Dados) para TrashNet
+
+Este módulo executa:
+- Limpeza (arquivos corrompidos, hash perceptual para duplicatas)
+- Feature Engineering (estatísticas de cor, brilho, nitidez, entropia, etc.)
+- Análise Univariada (distribuições e densidades por classe)
+- Análise Multivariada (correlação e PCA)
+- Seleção de Atributos (Mutual Information, RandomForest, Logistic L1)
+
+## Como atendemos aos requisitos
+
+- Limpeza
+	- Verificação de arquivos corrompidos com `PIL.Image.verify()` → campo `is_corrupted` em `image_features_with_meta.csv` e contagens em `summary.json`.
+	- Duplicatas via pHash (perceptual hash) e agrupamento por distância de Hamming → campo `phash` e `dup_group`.
+
+- Feature engineering
+	- Atributos por imagem: `width`, `height`, `area_px`, `aspect_ratio`, `mean_r/g/b`, `std_r/g/b`, `brightness_mean/std (HSV-V)`, `saturation_mean/std (HSV-S)`, `sharpness_lapl_var` (variância do Laplaciano), `colorfulness`, `entropy_gray` (se disponível).
+	- Arquivos: `image_features.csv` (somente features) e `image_features_with_meta.csv` (features + metadados).
+
+- Análise Univariada
+	- `plots_univariate/class_distribution.png` (contagem de classes).
+	- `plots_univariate/kde_*.png` (densidades por classe das principais features). O código evita warnings/erros quando há baixa variância.
+
+- Análise Multivariada (Correlação)
+	- `plots_multivariate/correlation_heatmap.png` (correlação de variáveis numéricas).
+	- `plots_multivariate/pca_scatter.png` (PCA 2D padronizado), visualizando separabilidade das classes.
+
+- Seleção de atributos
+	- Rankings salvos em CSV: `feature_selection/feature_importance_mutual_info.csv`, `feature_importance_random_forest.csv`, `feature_importance_logreg_l1.csv`.
+
+- Outros
+	- Robustez: continua a execução sem bibliotecas opcionais (ex.: `scikit-image`, `ImageHash`) preenchendo os campos ausentes com NaN/None.
+	- Guardas para colunas ausentes e pouca variância nos gráficos.
+	- Saídas organizadas por pastas, com `summary.json` sintetizando a limpeza.
+
+## Como rodar
+
+1) Instale as dependências da EDA (de preferência em um ambiente virtual):
+
+```powershell
+pip install -r trashnet/eda/requirements.txt
+```
+
+2) Execute o script (gera saídas em `trashnet/eda/outputs` por padrão):
+
+```powershell
+python trashnet/eda/eda.py trashnet/data/dataset-resized trashnet/eda/outputs
+```
+
+Arquivos gerados principais:
+- `image_features.csv` e `image_features_with_meta.csv`
+- `summary.json`
+- `plots_univariate/*.png`
+- `plots_multivariate/correlation_heatmap.png` e `pca_scatter.png`
+- `feature_selection/*.csv`
+
+> Observação: Caso alguma biblioteca opcional falte (ex.: OpenCV ou ImageHash), o script continua e registra NaN/None para os recursos correspondentes.
+
 ## Teste/Predict
 
 Para testar o modelo treinado, carregue os pesos salvos e utilize o método `predict` em uma imagem de teste.  
