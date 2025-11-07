@@ -1,0 +1,10 @@
+# Dependências para rodar a EDA (análise exploratória)
+pandas
+matplotlib
+seaborn
+scikit-learn
+scikit-image
+opencv-python
+Pillow
+ImageHash
+tqdm
