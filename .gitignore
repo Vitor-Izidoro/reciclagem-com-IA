@@ -1,6 +1,7 @@
 # Ignore the waste-classification folder (large dataset / external project)
 /waste-classification/
 /weights/
+/data/
 # Python cache and bytecode
 __pycache__/
 *.py[cod]
