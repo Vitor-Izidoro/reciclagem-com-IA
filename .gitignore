@@ -1,0 +1,16 @@
+# Ignore the waste-classification folder (large dataset / external project)
+/waste-classification/
+/weights/
+# Python cache and bytecode
+__pycache__/
+*.py[cod]
+*.pyc
+
+# Virtual environment folders
+venv/
+env/
+.venv/
+
+# Misc
+.env
+.DS_Store

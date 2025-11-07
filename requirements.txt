@@ -1,0 +1,5 @@
+# Requisitos: dependências Python necessárias para treinar e rodar o sistema
+tensorflow
+numpy
+keras
+opencv-python

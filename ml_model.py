@@ -6,6 +6,7 @@ import os
 import time
 import cv2
 from config import MLConfig
+from config import DEFAULT_WEIGHTS
 from camera import capture_image
 from utils import log_error, log_info
 from tensorflow.keras.preprocessing import image
@@ -57,8 +58,9 @@ def load_model() -> Optional[Any]:
     """
     Carrega o modelo ML de classificação de resíduos.
     """
-    try:        
-        weights_path = 'C:\\facul\\6periodo\\lixo-2\\weights\\weights-029-0.83.weights.h5'
+    try:
+        # Usar caminho relativo centralizado em config.py
+        weights_path = str(DEFAULT_WEIGHTS)
         model = TrashNetModel(weights_path)
         log_info("Modelo TrashNet carregado com sucesso")
         return model

@@ -1,5 +1,12 @@
 # Configurações: parâmetros para câmera, ML e comunicação utilizados pelo sistema
 from typing import List
+from pathlib import Path
+
+# Diretórios base do projeto (evita caminhos absolutos)
+BASE_DIR = Path(__file__).resolve().parent
+WEIGHTS_DIR = BASE_DIR / 'weights'
+# Peso padrão (ex.: melhor modelo salvo no repositório)
+DEFAULT_WEIGHTS = WEIGHTS_DIR / 'weights-029-0.83.weights.h5'
 
 class UDPConfig:    
     # --- UDP ---
